@@ -1,0 +1,229 @@
+<!-- 
+    "StAuth10244: I Yash Patel, 000842226 certify that this material is my original work.No other person's work has been used without due acknowledgement. I have not made my work available to anyone else."
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title> To-Do App </title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <style>
+        .heading
+        {
+            text-align: center;
+            font-family: "Lucida Console", "Courier New", monospace;
+        }
+        .thick
+        {
+            height: 5px;
+            background-color: black;
+            border: none;
+
+        }
+        body
+        {
+            background-color: #806600;
+        }
+        .task
+        {
+            font-size: 60px;
+        }
+        .taskinput
+        {
+            height: 60px;
+            width: 900px;
+            font-size: 30px;
+            border: none;
+            border-radius: 20px;
+        }
+        .addButton
+        {
+            height: 60px;
+            width: 160px;
+            border-radius: 20px;
+            border: none;
+            font-size: 30px;
+            background-color: lightgrey;
+        }
+        table, td,th
+        {
+            border: 2px solid black;
+            font-size: 24px;
+            padding: 13px;
+
+        }
+        table
+        {
+            border-collapse: collapse;
+        }
+        .taskTable
+        {
+            width: 300px;
+        }
+        .DeleteAllButton
+        {
+            background-color: coral;
+            width: 100px;
+            height: 40px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-left: 230px;
+
+
+        }
+        
+    </style>
+
+
+</head>
+<body>
+
+    <h1 class="heading">To-Do List</h1>
+    <hr><hr class="thick">
+
+    <div id="app"></div>
+
+    <script type="text/babel">
+
+    class List extends React.Component
+    {
+        // Not sure..
+        deleteLink(x)
+        {
+           let newList = this.props.list;
+
+           newList = newList .filter( x=> x.props.id != this.props.id);
+
+           this.setState({newList : this.props.list});
+
+
+        }
+        render()
+        {
+
+            return (
+            <tr>
+                <td>  {this.props.id}   </td>
+                <td className = "taskTable">  {this.props.task} </td>
+                <td onClick = {this.deleteLink.bind(this)}>{this.props.deleteTag} </td>
+                <td>{this.props.editTag}</td>
+
+            </tr>
+            )
+        }
+    }
+    
+    class Lists extends React.Component
+    {
+        constructor(props)
+        {
+            super(props);
+
+            this.state = {
+                list : [ {id: 1, task: "walk the dog", deleteTag: "Delete",  editTag: "Edit"},{id: 2, task: "pick up laundry",deleteTag: "Delete" , editTag: "Edit"} ],
+                taskInput: "",
+                last_id: 2,
+                deleteTag : "Delete",
+                editTag : "Edit"
+                
+                
+            }
+
+            
+        }
+
+        showList(x_list)
+        {
+            return( <List
+                        id = {x_list.id}
+                        task = {x_list. task}
+                        key={x_list.id}  
+                        deleteTag ={x_list.deleteTag}
+                        editTag = {x_list.editTag}
+                        list = {x_list.list}
+
+                        />)
+
+        }
+        changeTotask(event)
+        {
+            this.setState({taskInput: event.target.value})
+        }
+        
+        addTask()
+        {
+
+            let list_id = this.state.last_id + 1;
+            let newTask = this.state.taskInput;
+            let deleteTag = this.state.deleteTag;
+            let editTag = this.state.editTag;
+
+            let newList = {
+                id :list_id,
+                task: newTask,
+                deleteTag: deleteTag , 
+                editTag : editTag
+            }
+
+            let newLists = this.state.list;
+
+            newLists.push(newList);
+
+            this.setState({list : newLists,
+                           last_id: list_id});
+
+        }
+        deleteAll()
+        {
+            this.setState({list :[]})
+            
+
+            // Reset the list number to zero as everything is deleted
+            let list_id = this.state.last_id * 0;
+
+            this.setState( {last_id: list_id})
+        }
+
+        render()
+        {
+            return(
+                <div>  
+                    <label className = "task"> Task:  </label>
+                    <input type="text" className="taskinput" onChange = {this.changeTotask.bind(this)}  required />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button"
+                      className="addButton"
+                       onClick = {this.addTask.bind(this)} value="Add" />
+                        <div>
+                            <br /> <br />
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <th>Task No.</th>
+                                        <th>Task</th>
+                                     </tr>
+                                    {this.state.list.map ( this.showList)}
+                                    
+                                </tbody>
+                            </table>
+                            <br /> <br />
+                            <input type="button" value="Delete All" className="DeleteAllButton" onClick = {this.deleteAll.bind(this)} />
+                        </div>
+                </div>
+                   
+
+            )
+        }
+
+        
+     
+    }
+
+        ReactDOM.render(
+            <Lists />,
+            document.getElementById("app"));
+    </script>
+</body>
+</html>
